@@ -26,24 +26,32 @@ class ointSQL():
         self.cursor.execute(query)
         print('Новое лекарство успешно добавлено!')
 
-    def delete_table_medicines(self):
-        self.cursor.execute("DROP TABLE medicines")
+    def delete_table_ointments(self):
+        self.cursor.execute("DROP TABLE ointments")
 
     def extract_data(self,id):
-        self.cursor.execute(f"SELECT * FROM mysql WHERE id = {id}")
+        self.cursor.execute(f"SELECT * FROM ointments WHERE id = {id}")
         return self.cursor.fetchone()
 
     def update_data_with_name(self,id,name):
         self.cursor.execute(f"""
-        UPDATE medicines
+        UPDATE ointments
         SET name='{name}' WHERE id = {id};""")
 
     def update_data_with_price(self,id,price):
         self.cursor.execute(f"""
-        UPDATE medicines
+        UPDATE ointments
         SET price='{price}' WHERE id = {id};""")
 
     def update_data_with_desc(self,id,desc):
         self.cursor.execute(f"""
-        UPDATE medicines
+        UPDATE ointments
         SET description='{desc}' WHERE id = {id};""")
+
+    def extract_all_data(self):
+        self.cursor.execute(f"SELECT * FROM ointments")
+        return self.cursor.fetchall()
+
+    def extract_one_ointment(self, id):
+        self.cursor.execute(f"SELECT * FROM ointments WHERE id={id}")
+        return self.cursor.fetchall()

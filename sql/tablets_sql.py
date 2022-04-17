@@ -26,24 +26,36 @@ class tabletSQL():
         self.cursor.execute(query)
         print('Новое лекарство успешно добавлено!')
 
-    def delete_table_medicines(self):
-        self.cursor.execute("DROP TABLE medicines")
+    def delete_table_tablets(self):
+        self.cursor.execute("DROP TABLE tablets")
 
     def extract_data(self,id):
-        self.cursor.execute(f"SELECT * FROM mysql WHERE id = {id}")
+        self.cursor.execute(f"SELECT * FROM tablets WHERE id = {id}")
         return self.cursor.fetchone()
 
     def update_data_with_name(self,id,name):
         self.cursor.execute(f"""
-        UPDATE medicines
+        UPDATE tablets
         SET name='{name}' WHERE id = {id};""")
 
     def update_data_with_price(self,id,price):
         self.cursor.execute(f"""
-        UPDATE medicines
+        UPDATE tablets
         SET price='{price}' WHERE id = {id};""")
 
     def update_data_with_desc(self,id,desc):
         self.cursor.execute(f"""
-        UPDATE medicines
+        UPDATE tablets
         SET description='{desc}' WHERE id = {id};""")
+
+    def extract_all_data(self):
+        self.cursor.execute(f"SELECT * FROM tablets")
+        return self.cursor.fetchall()
+
+    def extract_name(self):
+        self.cursor.execute(f"SELECT name FROM tablets")
+        return self.cursor.fetchall()
+
+    def extract_one_tablet(self, id):
+        self.cursor.execute(f"SELECT * FROM tablets WHERE id={id}")
+        return self.cursor.fetchall()

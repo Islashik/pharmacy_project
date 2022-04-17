@@ -1,2 +1,7 @@
 .idea/
 venv/
+sql/__pycache__/ointments_sql.cpython-38.pyc
+sql/__pycache__/syrups_sql.cpython-38.pyc
+sql/__pycache__/tablets_sql.cpython-38.pyc
+pycache__/config.cpython-38.pyc
+__pycache__/database.cpython-38.pyc
