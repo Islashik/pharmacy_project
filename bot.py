@@ -1,3 +1,5 @@
+import random
+
 from config import TOKEN
 import telebot
 from database import cursor
@@ -6,8 +8,13 @@ from sql.tablets_sql import tabletSQL
 from sql.ointments_sql import ointSQL
 from sql.syrups_sql import syrupSQL
 from datetime import datetime
-
+from random import randint
 bot = telebot.TeleBot(TOKEN)
+
+
+img_list = ['img/doctor.jpg','img/doctor2.jpg','img/doctor3.jpg','img/johny.jpg','img/johny_doctor.jpeg']
+
+
 
 @bot.message_handler(commands=['start'])
 def send_welcome_message(message):
@@ -19,15 +26,17 @@ def send_welcome_message(message):
     ordering = types.InlineKeyboardButton('Добавить лекарство', callback_data="order")
     markup.row_width = 2
     markup.add(medicines, ordering)
+    bot.send_photo(message.chat.id, open(img_list[random.randint(0,len(img_list)-1)], 'rb'))
     bot.send_message(message.chat.id, text=text, reply_markup=markup)
-
-
 
 @bot.callback_query_handler(func=lambda call: call.data == "back")
 def answer_conatcts_callback(call):
     message = call.message
     if call.data == "back":
         send_welcome_message(message)
+
+
+
 
 @bot.callback_query_handler(func= lambda call: call.data=='order')
 def get_info(call):
@@ -39,7 +48,7 @@ def get_info(call):
 
 def add_order_review(message):
     medicine = message.text
-    user = message.from_user.username
+    user = message.from_user.first_name
     message_time = message.date
     created = datetime.fromtimestamp(message_time).strftime('%d-%m-%Y %H:%M:%S')
     with open('orders.txt', 'a', encoding='utf-8') as file:
@@ -50,6 +59,8 @@ def add_order_review(message):
                 """
         file.write(info)
     bot.send_message(message.chat.id, text="Спасибо, мы с вами свяжемся в течении недели!")
+
+
 
 
 
@@ -68,6 +79,10 @@ def send_all_genres(call):
         text="Выберите тип лекарства",
         message_id=message.id,
         reply_markup=markup)
+
+
+
+
 
 @bot.callback_query_handler(func= lambda call: call.data=='tablets')
 def send_all_tablets(call):
@@ -88,12 +103,10 @@ def send_all_tablets(call):
     message_id=message.id,
     reply_markup=markup)
 
-
 @bot.callback_query_handler(func=lambda call: call.data == "tablets_back")
 def answer_tablets_callback(call):
     if call.data == "tablets_back":
         send_all_genres(call)
-
 
 @bot.callback_query_handler(func= lambda call: str(call.data).startswith("tablet_"))
 def send_tablet_info(call):
@@ -117,11 +130,12 @@ def send_tablet_info(call):
         message_id=message.id,
         reply_markup=markup)
 
-
 @bot.callback_query_handler(func=lambda call: call.data == "tablets_info_back")
 def answer_tablet_callback(call):
     if call.data == "tablets_info_back":
         send_all_tablets(call)
+
+
 
 
 
@@ -146,7 +160,6 @@ def send_all_ointments(call):
     text="Выберите лекарство",
     message_id=message.id,
     reply_markup=markup)
-
 
 @bot.callback_query_handler(func=lambda call: call.data == "ointments_back")
 def answer_ointments_callback(call):
@@ -176,12 +189,11 @@ def send_ointment_info(call):
         message_id=message.id,
         reply_markup=markup)
 
-
-
 @bot.callback_query_handler(func=lambda call: call.data == "ointments_info_back")
 def answer_syrups_callback(call):
     if call.data == "ointments_info_back":
         send_all_ointments(call)
+
 
 
 
